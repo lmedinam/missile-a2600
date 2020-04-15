@@ -22,8 +22,11 @@ var running = false
 var game_over := false
 
 func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	
 	if OS.get_name() != "Android":
 		$UI/Messages/Start.text = "Shoot to start"
+		$Cursor.visible = true
 	
 	for objetive in get_tree().get_nodes_in_group("objetives"):
 		if not objetive.is_in_group("cities"):
@@ -47,6 +50,18 @@ func _input(event):
 
 func _process(delta):
 	$UI/Stack.modulate = LevelManager.get_color("background")
+	
+	if _any_smart_missle():
+		SoundsManager.play_loop("smart_missile", -15.0)
+	else:
+		SoundsManager.stop_loop("smart_missile")
+
+func _any_smart_missle() -> bool:
+	for enemy in $Enemies.get_children():
+		if enemy.is_in_group("smart_missiles"):
+			return true
+	
+	return false
 
 func reset_level() -> void:
 	missiles_available = LevelManager.missiles_count()
@@ -103,17 +118,16 @@ func _start_game():
 	$UI/Messages/Start.visible = false
 	$UI/DefendTheCities.visible = false
 	
-	reset_level()
+	SoundsManager.play("game_start", -10.0)
 	
-	spawn_enemy()
-	spawn_enemy()
-	spawn_enemy()
+	$StartGameDelay.start()
 
 # Thanos end this game, but destroy all
 func _end_game():
 	$SpawnTick.stop()
 	$Player.deactivated = true
 	$ShowGameOverDelay.start()
+	SoundsManager.play("game_over", 5.0)
 
 func _on_enemy_destroyed():
 	$AllDestroyedDelay.start()
@@ -205,13 +219,14 @@ func _on_Count_citites_tick_timeout():
 			city.destroyed = true
 			
 			LevelManager.add_score(LevelManager.DEFAULT_POINTS)
-			SoundsManager.play("city_bonus")
+			SoundsManager.play("bonus")
 			
 			return
 	
 	$CountCititesTick.stop()
 	LevelManager.level_up()
-	$StartGameDelay.start()
+	
+	_start_game()
 
 func _on_count_bullets_tick_timeout():
 	if not player_bullets > 0:
@@ -220,7 +235,7 @@ func _on_count_bullets_tick_timeout():
 		return
 	
 	LevelManager.add_score(LevelManager.DEFAULT_POINTS)
-	SoundsManager.play("player_missile_bonus", -15.0)
+	SoundsManager.play("bonus")
 	player_bullets -= 1
 	_restock()
 
@@ -229,7 +244,6 @@ func _on_show_game_over_delay_timeout():
 	running = false
 	$UI/Messages/GameOver.visible = true
 
-
 func _on_start_game_delay_timeout():
 	$Player.deactivated = false
 	
@@ -237,4 +251,8 @@ func _on_start_game_delay_timeout():
 	player_bullets = 10
 	_restock()
 	
-	_start_game()
+	reset_level()
+	
+	spawn_enemy()
+	spawn_enemy()
+	spawn_enemy()

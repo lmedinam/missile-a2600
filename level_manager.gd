@@ -53,6 +53,13 @@ func _ready():
 	main = get_node("/root/Main")
 	level = main.get_node("ViewportContainer/Viewport/Level")
 
+func _input(event):
+	if event.is_action_pressed("toggle_fullscreen"):
+		OS.window_fullscreen = !OS.window_fullscreen
+	
+	if event.is_action_pressed("ui_cancel"):
+		get_tree().quit()
+
 func get_color(name: String) -> Color:
 	return COLORS[active_color][name]
 

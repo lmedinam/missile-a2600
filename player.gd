@@ -25,7 +25,7 @@ func shoot():
 		
 		$RateDelay.start()
 		
-		SoundsManager.play("player_missile_launch")
+		SoundsManager.play("player_missile_launch", -15.0)
 		
 		get_parent().add_child(missile)
 		emit_signal("shoots")

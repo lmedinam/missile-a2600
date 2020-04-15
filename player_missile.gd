@@ -19,7 +19,7 @@ func explode() -> void:
 	var explosion := Explosion.instance()
 	explosion.position = destroy_at
 	
-	SoundsManager.play("player_missile_explosion", -15.0)
+	SoundsManager.play("player_missile_explosion", -5.0)
 	
 	get_parent().add_child(explosion)
 	queue_free()
