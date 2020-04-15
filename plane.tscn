@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://plane.gd" type="Script" id=1]
+[ext_resource path="res://plane.png" type="Texture" id=2]
+[ext_resource path="res://modulate_sprite.gd" type="Script" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 4.0
+
+[node name="Plane" type="KinematicBody2D"]
+collision_mask = 0
+script = ExtResource( 1 )
+
+[node name="Body" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="ModulateSprite" type="Sprite" parent="."]
+modulate = Color( 0.988235, 0.572549, 0.54902, 1 )
+texture = ExtResource( 2 )
+script = ExtResource( 3 )
+modulate_color = "Enemy"
+
+[node name="Canon" type="Position2D" parent="."]
+position = Vector2( 0, 8 )
+
+[node name="ShootTick" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+[connection signal="timeout" from="ShootTick" to="." method="_on_shoot_tick_timeout"]

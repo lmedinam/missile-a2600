@@ -1,0 +1,282 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://level.gd" type="Script" id=1]
+[ext_resource path="res://background.png" type="Texture" id=2]
+[ext_resource path="res://modulate_sprite.gd" type="Script" id=3]
+[ext_resource path="res://ground.png" type="Texture" id=4]
+[ext_resource path="res://city.tscn" type="PackedScene" id=5]
+[ext_resource path="res://player.tscn" type="PackedScene" id=6]
+[ext_resource path="res://bullets.tscn" type="PackedScene" id=7]
+[ext_resource path="res://stack.tscn" type="PackedScene" id=8]
+[ext_resource path="res://score.tscn" type="PackedScene" id=9]
+[ext_resource path="res://font_big.tres" type="DynamicFont" id=10]
+[ext_resource path="res://minimal_3x5.ttf" type="DynamicFontData" id=11]
+[ext_resource path="res://arrow.png" type="Texture" id=12]
+[ext_resource path="res://cursor.tscn" type="PackedScene" id=13]
+
+[sub_resource type="DynamicFont" id=1]
+size = 8
+font_data = ExtResource( 11 )
+
+[sub_resource type="Animation" id=2]
+resource_name = "default"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Arrows:margin_top")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 2.0 ]
+}
+
+[node name="Level" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Background" type="Sprite" parent="."]
+modulate = Color( 0.164706, 0.223529, 0.737255, 1 )
+texture = ExtResource( 2 )
+centered = false
+script = ExtResource( 3 )
+modulate_color = "Background"
+random = false
+random_tick = 0.05
+
+[node name="Ground" type="Sprite" parent="."]
+modulate = Color( 0.4, 0.564706, 0.266667, 1 )
+texture = ExtResource( 4 )
+centered = false
+script = ExtResource( 3 )
+modulate_color = "Enviroment"
+random = false
+random_tick = 0.05
+
+[node name="LeftCitites" type="Node2D" parent="."]
+editor/display_folded = true
+position = Vector2( 12, 134 )
+
+[node name="LeftCity" parent="LeftCitites" groups=[
+"objetives",
+"cities",
+] instance=ExtResource( 5 )]
+position = Vector2( 19, 0 )
+
+[node name="CenterCity" parent="LeftCitites" groups=[
+"objetives",
+"cities",
+] instance=ExtResource( 5 )]
+position = Vector2( 57, 0 )
+
+[node name="RightCity" parent="LeftCitites" groups=[
+"objetives",
+"cities",
+] instance=ExtResource( 5 )]
+position = Vector2( 95, 0 )
+
+[node name="RightCities" type="Node2D" parent="."]
+editor/display_folded = true
+position = Vector2( 158, 134 )
+
+[node name="LeftCity" parent="RightCities" groups=[
+"objetives",
+"cities",
+] instance=ExtResource( 5 )]
+position = Vector2( 19, 0 )
+
+[node name="CenterCity" parent="RightCities" groups=[
+"objetives",
+"cities",
+] instance=ExtResource( 5 )]
+position = Vector2( 57, 0 )
+
+[node name="RightCity" parent="RightCities" groups=[
+"objetives",
+"cities",
+] instance=ExtResource( 5 )]
+position = Vector2( 95, 0 )
+
+[node name="Player" parent="." groups=[
+"objetives",
+] instance=ExtResource( 6 )]
+position = Vector2( 142, 136 )
+
+[node name="SpawnTick" type="Timer" parent="."]
+wait_time = 2.5
+
+[node name="CountCititesTick" type="Timer" parent="."]
+wait_time = 0.25
+
+[node name="CountBulletsTick" type="Timer" parent="."]
+wait_time = 0.25
+
+[node name="ShowGameOverDelay" type="Timer" parent="."]
+one_shot = true
+
+[node name="StartGameDelay" type="Timer" parent="."]
+one_shot = true
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="UI" type="Node2D" parent="."]
+position = Vector2( 135, 142 )
+z_index = 800
+
+[node name="Bullets" parent="UI" instance=ExtResource( 7 )]
+
+[node name="Stack" parent="UI" instance=ExtResource( 8 )]
+margin_left = -123.046
+margin_top = 2.17302
+margin_right = -123.046
+margin_bottom = 2.17302
+
+[node name="Score" parent="UI" instance=ExtResource( 9 )]
+margin_left = -135.046
+margin_top = -141.827
+margin_right = -135.046
+margin_bottom = -141.827
+
+[node name="Messages" type="HBoxContainer" parent="UI"]
+editor/display_folded = true
+margin_left = -135.0
+margin_top = -101.0
+margin_right = 149.0
+margin_bottom = -61.0
+alignment = 1
+
+[node name="Start" type="Label" parent="UI/Messages"]
+margin_left = 100.0
+margin_top = 14.0
+margin_right = 184.0
+margin_bottom = 26.0
+custom_fonts/font = ExtResource( 10 )
+text = "tap to start"
+
+[node name="GameOver" type="VBoxContainer" parent="UI/Messages"]
+editor/display_folded = true
+visible = false
+margin_left = 107.0
+margin_right = 177.0
+margin_bottom = 40.0
+alignment = 1
+
+[node name="Label" type="Label" parent="UI/Messages/GameOver"]
+margin_top = 9.0
+margin_right = 70.0
+margin_bottom = 21.0
+custom_fonts/font = ExtResource( 10 )
+text = "Game Over"
+align = 1
+
+[node name="ClickToContinue" type="Label" parent="UI/Messages/GameOver"]
+margin_top = 25.0
+margin_right = 70.0
+margin_bottom = 31.0
+custom_fonts/font = SubResource( 1 )
+text = "Shoot to restart"
+align = 1
+
+[node name="DefendTheCities" type="Control" parent="UI"]
+editor/display_folded = true
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="LabelsWrapper" type="Control" parent="UI/DefendTheCities"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Label" type="Label" parent="UI/DefendTheCities/LabelsWrapper"]
+margin_left = -97.1339
+margin_top = -37.5517
+margin_right = -34.1339
+margin_bottom = -31.5517
+custom_fonts/font = SubResource( 1 )
+text = "Defend the cities"
+
+[node name="Label2" type="Label" parent="UI/DefendTheCities/LabelsWrapper"]
+margin_left = 49.0676
+margin_top = -37.0511
+margin_right = 112.068
+margin_bottom = -31.0511
+custom_fonts/font = SubResource( 1 )
+text = "Defend the cities"
+
+[node name="Arrows" type="Control" parent="UI/DefendTheCities"]
+editor/display_folded = true
+margin_top = 0.436589
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Arrow" type="TextureRect" parent="UI/DefendTheCities/Arrows"]
+margin_left = -112.267
+margin_top = -28.0069
+margin_right = -96.2666
+margin_bottom = -12.0069
+texture = ExtResource( 12 )
+
+[node name="Arrow4" type="TextureRect" parent="UI/DefendTheCities/Arrows"]
+margin_left = 33.9349
+margin_top = -28.0069
+margin_right = 49.9349
+margin_bottom = -12.0069
+texture = ExtResource( 12 )
+
+[node name="Arrow2" type="TextureRect" parent="UI/DefendTheCities/Arrows"]
+margin_left = -73.989
+margin_top = -28.0069
+margin_right = -57.989
+margin_bottom = -12.0069
+texture = ExtResource( 12 )
+
+[node name="Arrow5" type="TextureRect" parent="UI/DefendTheCities/Arrows"]
+margin_left = 72.2124
+margin_top = -28.0069
+margin_right = 88.2124
+margin_bottom = -12.0069
+texture = ExtResource( 12 )
+
+[node name="Arrow3" type="TextureRect" parent="UI/DefendTheCities/Arrows"]
+margin_left = -35.8955
+margin_top = -28.0069
+margin_right = -19.8955
+margin_bottom = -12.0069
+texture = ExtResource( 12 )
+
+[node name="Arrow6" type="TextureRect" parent="UI/DefendTheCities/Arrows"]
+margin_left = 110.306
+margin_top = -28.0069
+margin_right = 126.306
+margin_bottom = -12.0069
+texture = ExtResource( 12 )
+
+[node name="ArrowsAnimationPlayer" type="AnimationPlayer" parent="UI/DefendTheCities"]
+autoplay = "default"
+anims/default = SubResource( 2 )
+
+[node name="CreditsContainer" type="HBoxContainer" parent="UI"]
+margin_left = -135.44
+margin_top = 4.79936
+margin_right = 148.56
+margin_bottom = 17.7994
+alignment = 1
+
+[node name="CreditsLabel" type="Label" parent="UI/CreditsContainer"]
+margin_left = 99.0
+margin_top = 1.0
+margin_right = 184.0
+margin_bottom = 7.0
+custom_fonts/font = SubResource( 1 )
+text = "by Dobleme Team - V 0.1.0"
+
+[node name="Cursor" parent="." instance=ExtResource( 13 )]
+z_index = 1000
+[connection signal="got_hit" from="Player" to="." method="_on_player_got_hit"]
+[connection signal="shoots" from="Player" to="." method="_on_player_shoots"]
+[connection signal="timeout" from="SpawnTick" to="." method="_on_spawn_tick_timeout"]
+[connection signal="timeout" from="CountCititesTick" to="." method="_on_Count_citites_tick_timeout"]
+[connection signal="timeout" from="CountBulletsTick" to="." method="_on_count_bullets_tick_timeout"]
+[connection signal="timeout" from="ShowGameOverDelay" to="." method="_on_show_game_over_delay_timeout"]
+[connection signal="timeout" from="StartGameDelay" to="." method="_on_start_game_delay_timeout"]
