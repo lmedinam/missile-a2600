@@ -9,7 +9,7 @@ var deactivated = true
 var can_shoot = true
 
 func _input(event: InputEvent):
-	if event.is_action_pressed("ui_select"):
+	if (event.is_action_pressed("ui_select") or event is InputEventScreenTouch) and event.pressed and !event.is_echo():
 		shoot()
 
 func shoot():

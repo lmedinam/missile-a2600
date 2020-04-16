@@ -41,7 +41,7 @@ func _ready():
 	$UI/Stack.count(player_bullet_stacks)
 
 func _input(event):
-	if event.is_action_pressed("ui_select") and not running:
+	if (event.is_action_pressed("ui_select") or event is InputEventScreenTouch)  and not running:
 		running = true
 		$Player.deactivated = false
 		
